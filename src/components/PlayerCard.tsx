@@ -1,4 +1,3 @@
-import { Player } from "@prisma/client";
 import { NFLTeamMap, nflTeamMap } from "@/config/league";
 
 export default function PlayerCard({ player }: { player: any }) {
