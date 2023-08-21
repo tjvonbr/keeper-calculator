@@ -22,7 +22,9 @@ export default function Leaguesperations() {
   }, []);
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
-      <h1 className="text-2xl font-bold">Leagues</h1>
+      <h1 className="absolute top-3 left-3 text-4xl text-white font-bold">
+        Leagues
+      </h1>
       <div className="w-1/2">
         {leagues.map((league: any, idx: number) => {
           return <LeagueCard key={idx} league={league} />;

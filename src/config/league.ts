@@ -75,3 +75,14 @@ export const nflTeamPrimaryColor: NFLTeamPrimaryColor = {
   TEN: "Tennessee Titans",
   WAS: "Washington Commanders",
 };
+
+export interface SeasonStatus {
+  [key: string]: string;
+}
+
+export const seasonStatusMap: SeasonStatus = {
+  pre_draft: "Preseason",
+  drafting: "Drafting",
+  in_season: "In-season",
+  complete: "Postseason",
+};
