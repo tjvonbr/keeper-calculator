@@ -21,27 +21,51 @@ export async function getDraftPicks(leagueId: string) {
   }
 }
 
-export async function getPlayerProjection(sleeperIds: string[]) {
-  const dbPlayers = await db.player.findMany({
+export async function getPlayerProjections(
+  leagueId: string,
+  sleeperIds: string[]
+) {
+  const players = await db.player.findMany({
     where: {
       sleeperId: { in: sleeperIds },
     },
   });
 
-  if (!dbPlayers) {
+  if (!players) {
     return;
   }
 
-  const projectionResults = [];
+  // Grab the league's draft picks
+  const draftPicks = await getDraftPicks(leagueId);
+  console.log(draftPicks);
 
-  for (const dbPlayer of dbPlayers) {
-    const fantasyDataUrl = `https://api.sportsdata.io/v3/nfl/projections/json/PlayerSeasonProjectionStatsByTeam/2023/${dbPlayer.team}?key=${process.env.SPORTS_DATA_API_KEY}`;
+  const projectionResults: any[] = [];
+
+  for (const player of players) {
+    const [draft] = draftPicks.filter(
+      (pick: any) => pick.player_id === player.sleeperId
+    );
+
+    const playerObj = { adp: null, draft, ...player };
+
+    const fantasyDataUrl = `https://api.sportsdata.io/v3/nfl/projections/json/PlayerSeasonProjectionStatsByTeam/2023/${player.team}?key=${process.env.SPORTS_DATA_API_KEY}`;
     const response = await fetch(fantasyDataUrl);
     const playersTeam = await response.json();
-    const playerProjection = playersTeam.filter(
-      (player: any) => player.PlayerID === dbPlayer.fantasyId
-    );
-    projectionResults.push(playerProjection);
+
+    let playerProjection;
+    // Some of the players returned from the Sleeper API are without a fantasy ID...
+    if (player.fantasyId === null) {
+      [playerProjection] = playersTeam.filter(
+        (p: any) => p.Name === `${player.firstName} ${player.lastName}`
+      );
+    } else {
+      [playerProjection] = playersTeam.filter(
+        (p: any) => p.PlayerID === player.fantasyId
+      );
+    }
+
+    playerObj.adp = playerProjection.AverageDraftPositionPPR;
+    projectionResults.push(playerObj);
   }
 
   return projectionResults;

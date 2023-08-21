@@ -3,6 +3,8 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import Spinner from "./Spinner";
 
 export default function LeagueForm() {
   const [userId, setUserId] = useState("");
@@ -12,6 +14,7 @@ export default function LeagueForm() {
   const searchParams = useSearchParams();
 
   async function handleSubmit(e: React.FormEvent) {
+    setIsLoading(true);
     e.preventDefault();
 
     const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -21,12 +24,13 @@ export default function LeagueForm() {
     const response = await fetch(leaguesUrl);
     const leagues = await response.json();
 
+    setIsLoading(false);
+
     if (leagues === null || leagues.length === 0) {
       return toast.error(
         "We didn't find any leagues associated with this user ID"
       );
     } else {
-      toast.success("Good news!  We found some leagues for you.  One moment!");
       current.set("userId", id);
       const search = current.toString();
       const query = search ? `?${search}` : "";
@@ -35,12 +39,18 @@ export default function LeagueForm() {
   }
 
   return (
-    <form className="w-1/4 p-5 flex flex-col items-center space-y-5 rounded-md shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)]">
+    <form className="w-1/2 p-5 flex flex-col items-center space-y-5 rounded-md bg-white shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
       <div className="flex flex-col space-y-2">
-        <h1 className="w-full text-left text-2xl font-bold">Sign in</h1>
+        <h1 className="w-full text-left text-2xl font-bold">
+          Find your leagues
+        </h1>
         <p className="text-sm text-slate-500">
-          Enter your Sleeper credentials below to evaluate your keepers. If you
-          don&apos;t know how to find these credentials, watch this video.
+          Enter your Sleeper credentials below to evaluate your keepers.
+          Don&apos;t know how to find your Sleeper ID? Watch{" "}
+          <Link className="text-[#005f83] hover:underline" href="#">
+            this
+          </Link>
+          .
         </p>
       </div>
       <fieldset className="w-full flex flex-col">
@@ -48,7 +58,7 @@ export default function LeagueForm() {
           Sleeper User ID
         </label>
         <input
-          className="h-10 w-full px-3 py-2 border border-slate-200 rounded-md text-sm"
+          className="h-10 w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
           type="text"
           value={userId}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -57,10 +67,11 @@ export default function LeagueForm() {
         />
       </fieldset>
       <button
-        className="h-10 w-full bg-blue-600 hover:opacity-90 flex items-center justify-center rounded-md text-sm text-white font-medium transition-all"
+        className="h-10 w-full hover:opacity-90 flex items-center justify-center rounded-md text-sm text-white font-medium transition-all bg-[#29c6ff] disabled:cursor-not-allowed"
+        disabled={userId.length < 1 || isLoading}
         onClick={handleSubmit}
       >
-        Continue
+        {isLoading ? <Spinner size={20} /> : "Continue"}
       </button>
     </form>
   );
