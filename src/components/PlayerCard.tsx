@@ -1,5 +1,5 @@
 import { Player } from "@prisma/client";
-import { NFLTeamMap, nflTeamMap } from "@/config/teams";
+import { NFLTeamMap, nflTeamMap } from "@/config/league";
 
 export default function PlayerCard({ player }: { player: Player }) {
   const fullName = player.firstName + " " + player.lastName;
