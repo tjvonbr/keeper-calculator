@@ -37,7 +37,6 @@ export async function getPlayerProjections(
 
   // Grab the league's draft picks
   const draftPicks = await getDraftPicks(leagueId);
-  console.log(draftPicks);
 
   const projectionResults: any[] = [];
 

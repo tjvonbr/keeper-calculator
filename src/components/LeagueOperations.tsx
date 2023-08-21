@@ -9,8 +9,6 @@ export default function LeagueOperations({ keepers }: { keepers: any[] }) {
   const current = new URLSearchParams(Array.from(searchParams.entries()));
   const userId = current.get("userId");
 
-  console.log(keepers);
-
   if (userId) {
     const myKeepers = keepers.filter(
       (keeper) => keeper.draft.picked_by === userId
