@@ -14,7 +14,10 @@ model Player {
   id              String     @id @default(uuid())
   firstName       String
   lastName        String
+  height          String?
+  weight          String?
   team            String?
+  jerseyNumber    Int?
   position        String?
   fantasyId       Int?
   sleeperId       String

@@ -1,3 +1,4 @@
+import { getDraftPicks } from "@/lib/helpers";
 import { db } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -36,6 +37,8 @@ export async function GET(req: NextRequest) {
           (p: any) => p.PlayerID === player.fantasyId
         );
       }
+
+      // const draftPicks = await getDraftPicks(params.leagueId);
 
       playerObj.adp = playerProjection.AverageDraftPositionPPR;
 
