@@ -38,7 +38,7 @@ export default function LeagueForm() {
   }
 
   return (
-    <form className="w-1/2 p-5 flex flex-col items-center space-y-5 rounded-md bg-white shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
+    <form className="w-3/4 lg:w-1/2 p-5 flex flex-col items-center space-y-5 rounded-md bg-white shadow-[0_20px_50px_rgba(41,198,255,_0.5)]">
       <div className="flex flex-col space-y-2">
         <h1 className="w-full text-left text-2xl font-bold">
           Find your leagues

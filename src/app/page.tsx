@@ -1,4 +1,5 @@
 import LeagueForm from "@/components/LeagueForm";
+import { Hammer, Medal, Ruler, Scale } from "lucide-react";
 import { db } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
@@ -37,55 +38,66 @@ export default async function Home() {
   //   }
   //   console.log(error);
   // }
-
   return (
-    <main className="min-h-screen grid grid-cols-2 items-center">
-      <div className="h-screen flex flex-col justify-center items-center">
-        <div className="w-3/4 flex flex-col justify-center items-center text-center space-y-4">
+    <main className="md:min-h-screen mb-10 md:mb-0 flex flex-col lg:flex-row">
+      <div className="md:h-screen w-full lg:w-1/2 flex flex-col md:justify-center items-center">
+        <div className="w-3/4 p-5 flex flex-col justify-center items-center text-center space-y-4">
           <h1 className="text-5xl text-white font-bold">
             Sleeper Keeper Calculator
           </h1>
-          <p className="text-xl text-slate-300 font-light">
+          <p className="text-xl text-[#b4bcd0] font-light">
             Discover your keeper values and compare against the teams in your
             Sleeper leagues.
           </p>
-          <div className="w-full flex">
-            <div className="w-1/2 flex flex-col items-center">
-              <p className="text-lg font-semibold text-white text-left">
-                What it does:
+          <div className="w-full flex flex-col items-center md:flex-row md:items-start space-y-6 md:space-y-0 md:space-x-4">
+            <div className="w-full flex-col text-center md:text-left">
+              <div className="flex justify-center md:justify-start space-x-1 text-lg md:text-sm text-white font-semibold">
+                <div className="flex justify-center items-center">
+                  <Scale size={15} />
+                </div>
+                <p>Evaluate</p>
+              </div>
+              <p className="text-lg md:text-sm text-[#b4bcd0]">
+                Receive your keepers&apos; valuations
               </p>
-              <ul className="text-white font-light space-y-4 text-left">
-                <li>
-                  ✅ Pulls your keepers from your Sleeper leagues and learns
-                  where your player will be drafted
-                </li>
-                <li>
-                  ✅ Compares your draft pick with the player&apos;s average
-                  draft position and gives you a score
-                </li>
-                <li>✅ Shares your fellow league owners&apos; keeper scores</li>
-              </ul>
             </div>
-            <div className="w-1/2 flex flex-col items-center">
-              <p className="text-lg font-semibold text-white text-left">
-                What it doesn&apos;t do:
+            <div className="w-full flex-col items-center text-center md:text-left">
+              <div className="flex justify-center md:justify-start space-x-1 text-lg md:text-sm text-white font-semibold">
+                <div className="flex justify-center items-center">
+                  <Ruler size={15} />
+                </div>
+                <p>Compare</p>
+              </div>
+              <p className="text-lg md:text-sm text-[#b4bcd0]">
+                See where you stack up against your league
               </p>
-              <ul className="text-white font-light space-y-4 text-left">
-                <li>
-                  🚫 Tells you which of your players would be the optimal
-                  keepers
-                </li>
-                <li>
-                  🚫 Allows you to change your keepers from this platform. You
-                  can only do that in the Sleeper app.
-                </li>
-                <li>🚫 Store any of your personal data</li>
-              </ul>
+            </div>
+            <div className="w-full flex-col text-center md:text-left">
+              <div className="flex justify-center md:justify-start space-x-1 text-lg md:text-sm text-white font-semibold">
+                <div className="flex justify-center items-center">
+                  <Hammer size={15} />
+                </div>
+                <p>Build</p>
+              </div>
+              <p className="text-lg md:text-sm text-[#b4bcd0]">
+                Optimize your keeper selection based on results
+              </p>
+            </div>
+            <div className="w-full flex-col text-center md:text-left">
+              <div className="flex md:justify-start justify-center space-x-1 text-lg md:text-sm text-white font-semibold">
+                <div className="flex justify-center items-center">
+                  <Medal size={15} />
+                </div>
+                <p>Win</p>
+              </div>
+              <p className="text-lg md:text-sm text-[#b4bcd0]">
+                Win your league by optimizing your keepers
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <div className="h-screen flex flex-col justify-center items-center">
+      <div className="lg:h-screen w-full lg:w-1/2 flex flex-col lg:justify-center items-center">
         <LeagueForm />
       </div>
     </main>
