@@ -7,7 +7,7 @@ import Link from "next/link";
 import Spinner from "./Spinner";
 
 export default function LeagueForm() {
-  const [userId, setUserId] = useState("");
+  const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -18,24 +18,23 @@ export default function LeagueForm() {
     e.preventDefault();
 
     const current = new URLSearchParams(Array.from(searchParams.entries()));
-    const id = userId.trim();
+    const trimmedUsername = username.trim();
 
-    const leaguesUrl = `https://api.sleeper.app/v1/user/${id}/leagues/nfl/2023`;
+    const leaguesUrl = `https://api.sleeper.app/v1/user/${trimmedUsername}`;
     const response = await fetch(leaguesUrl);
-    const leagues = await response.json();
+    const user = await response.json();
 
-    setIsLoading(false);
-
-    if (leagues === null || leagues.length === 0) {
+    if (!user) {
+      setIsLoading(false);
       return toast.error(
-        "We didn't find any leagues associated with this user ID"
+        "We didn't find any accounts associated with this username"
       );
-    } else {
-      current.set("userId", id);
-      const search = current.toString();
-      const query = search ? `?${search}` : "";
-      router.push(`leagues/${query}`);
     }
+
+    current.set("userId", user.user_id);
+    const search = current.toString();
+    const query = search ? `?${search}` : "";
+    router.push(`leagues/${query}`);
   }
 
   return (
@@ -45,8 +44,8 @@ export default function LeagueForm() {
           Find your leagues
         </h1>
         <p className="text-sm text-slate-500">
-          Enter your Sleeper credentials below to evaluate your keepers.
-          Don&apos;t know how to find your Sleeper ID? Watch{" "}
+          Enter your Sleeper username below to evaluate your keepers. Don&apos;t
+          know how to find your username? Watch{" "}
           <Link className="text-[#005f83] hover:underline" href="#">
             this
           </Link>
@@ -55,20 +54,20 @@ export default function LeagueForm() {
       </div>
       <fieldset className="w-full flex flex-col">
         <label className="text-xs font-bold" htmlFor="userId">
-          Sleeper User ID
+          Sleeper username
         </label>
         <input
           className="h-10 w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
           type="text"
-          value={userId}
+          value={username}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUserId(e.target.value)
+            setUsername(e.target.value)
           }
         />
       </fieldset>
       <button
         className="h-10 w-full hover:opacity-90 flex items-center justify-center rounded-md text-sm text-white font-medium transition-all bg-[#29c6ff] disabled:cursor-not-allowed"
-        disabled={userId.length < 1 || isLoading}
+        disabled={username.length < 1 || isLoading}
         onClick={handleSubmit}
       >
         {isLoading ? <Spinner size={20} /> : "Continue"}
