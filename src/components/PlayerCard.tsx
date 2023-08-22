@@ -21,8 +21,7 @@ export default function PlayerCard({ player }: { player: any }) {
       </div>
       <div className="flex items-center space-x-4">
         <p className="text-sm font-medium">
-          Pick:{" "}
-          <span className="text-sm font-medium">{player.draft.pick_no}</span>
+          Pick: <span className="text-sm font-medium">{player.pickNumber}</span>
         </p>
         <p className="text-sm font-medium">
           ADP:{" "}
@@ -31,7 +30,7 @@ export default function PlayerCard({ player }: { player: any }) {
         <p className="text-sm font-medium">
           Value:{" "}
           <span className="text-sm font-medium">
-            {player.draft.pick_no - Math.round(player.adp)}
+            {player.pickNumber - Math.round(player.adp)}
           </span>
         </p>
       </div>
