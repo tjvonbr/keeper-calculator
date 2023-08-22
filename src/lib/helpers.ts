@@ -1,3 +1,4 @@
+import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
 export async function getDraftPicks(leagueId: string) {
@@ -21,6 +22,13 @@ export async function getDraftPicks(leagueId: string) {
   }
 }
 
+export interface PlayerWithDraftValue extends Player {
+  adp: number;
+  pickedBy: string;
+  pickNumber: number;
+  keeperValue: number;
+}
+
 export async function getPlayerProjections(
   leagueId: string,
   sleeperIds: string[]
@@ -41,11 +49,9 @@ export async function getPlayerProjections(
   const projectionResults: any[] = [];
 
   for (const player of players) {
-    const [draft] = draftPicks.filter(
-      (pick: any) => pick.player_id === player.sleeperId
+    const [pick] = draftPicks.filter(
+      (dp: any) => dp.player_id === player.sleeperId
     );
-
-    const playerObj = { adp: null, draft, ...player };
 
     const fantasyDataUrl = `https://api.sportsdata.io/v3/nfl/projections/json/PlayerSeasonProjectionStatsByTeam/2023/${player.team}?key=${process.env.SPORTS_DATA_API_KEY}`;
     const response = await fetch(fantasyDataUrl);
@@ -63,7 +69,16 @@ export async function getPlayerProjections(
       );
     }
 
-    playerObj.adp = playerProjection.AverageDraftPositionPPR;
+    const playerObj: PlayerWithDraftValue = {
+      adp: Math.round(playerProjection.AverageDraftPositionPPR),
+      keeperValue: Math.round(
+        pick.pick_no - playerProjection.AverageDraftPositionPPR
+      ),
+      pickedBy: pick.picked_by,
+      pickNumber: pick.pick_no,
+      ...player,
+    };
+
     projectionResults.push(playerObj);
   }
 
