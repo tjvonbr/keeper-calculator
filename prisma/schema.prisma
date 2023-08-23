@@ -21,4 +21,5 @@ model Player {
   position        String?
   fantasyId       Int?
   sleeperId       String
+  adp             Int?
 }
