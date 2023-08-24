@@ -20,6 +20,6 @@ model Player {
   jerseyNumber    Int?
   position        String?
   fantasyId       Int?
-  sleeperId       String
+  sleeperId       String    @unique
   adp             Int?
 }
