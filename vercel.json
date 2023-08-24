@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/crons/fetch-player-adp",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}
