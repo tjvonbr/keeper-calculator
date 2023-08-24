@@ -7,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Leagues() {
-  const response = await fetch("http://localhost:3000/api/leagues");
-  const adp = await response.json();
-  console.log(adp);
-
   return <LeaguesOperations />;
 }
