@@ -16,6 +16,8 @@ export default function LeagueOperations({ keepers }: { keepers: any[] }) {
       (keeper) => keeper.pickedBy === userId
     );
 
+    console.log(myKeepers);
+
     return (
       <div className="w-1/2 flex flex-col items-center space-y-4">
         {myKeepers.map((keeper: Player, idx: number) => {
