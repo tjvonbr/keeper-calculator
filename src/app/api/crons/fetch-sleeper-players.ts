@@ -6,7 +6,11 @@ export async function GET() {
     const url = "https://api.sleeper.app/v1/players/nfl";
 
     const response = await fetch(url);
-    const players = await response.json();
+    const rawPlayers = await response.json();
+
+    const players: any[] = Object.values(rawPlayers).filter(
+      (player: any) => player.status !== "Inactive"
+    );
 
     for (const player of players) {
       const dbPlayer = await db.player.findFirst({
