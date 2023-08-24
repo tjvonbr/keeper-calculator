@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   description: "Sleeper Leagues",
 };
 
-export default function Leagues() {
+export default async function Leagues() {
   return <LeaguesOperations />;
 }

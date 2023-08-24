@@ -1,5 +1,4 @@
 import LeagueOperations from "@/components/LeagueOperations";
-import { getPlayerProjections } from "@/lib/helpers";
 import { notFound } from "next/navigation";
 
 interface LeagueProps {
@@ -14,9 +13,7 @@ export default async function League({ params }: LeagueProps) {
 
   const keepers = rosters.map((roster: any) => roster.keepers).flat();
 
-  const keepersWithADP = await getPlayerProjections(params.leagueId, keepers);
-
-  if (!keepersWithADP) {
+  if (!keepers) {
     return notFound();
   }
 
@@ -25,7 +22,7 @@ export default async function League({ params }: LeagueProps) {
       <h1 className="absolute top-3 left-3 text-4xl text-white font-bold self-start">
         Keepers
       </h1>
-      <LeagueOperations keepers={keepersWithADP} />
+      <LeagueOperations keepers={keepers} />
     </div>
   );
 }

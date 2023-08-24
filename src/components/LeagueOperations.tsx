@@ -3,13 +3,8 @@
 import { Player } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import PlayerCard from "./PlayerCard";
-import { PlayerWithDraftValue } from "@/lib/helpers";
 
-export default function LeagueOperations({
-  keepers,
-}: {
-  keepers: PlayerWithDraftValue[];
-}) {
+export default function LeagueOperations({ keepers }: { keepers: any[] }) {
   const searchParams = useSearchParams();
   const current = new URLSearchParams(Array.from(searchParams.entries()));
   const userId = current.get("userId");
