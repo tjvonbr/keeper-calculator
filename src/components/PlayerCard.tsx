@@ -1,7 +1,31 @@
 import { NFLTeamMap, nflTeamMap } from "@/config/league";
 
-export default function PlayerCard({ player }: { player: any }) {
+export default function PlayerCard({
+  idx,
+  keepers,
+  player,
+}: {
+  idx: number;
+  keepers: number;
+  player: any;
+}) {
   const fullName = player.firstName + " " + player.lastName;
+
+  function renderPlayerEmoji() {
+    if (idx === 0) {
+      return "🥇";
+    } else if (idx === 1) {
+      return "🥈";
+    } else if (idx === 2) {
+      return "🥉";
+    } else if (idx === keepers - 1) {
+      return "💩";
+    } else if (idx === keepers - 2) {
+      return "😬";
+    } else {
+      return "";
+    }
+  }
 
   return (
     <div className="h-20 w-full p-2 flex flex-col space-between border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
@@ -32,6 +56,7 @@ export default function PlayerCard({ player }: { player: any }) {
           <span className="text-sm font-medium">
             {player.pickNumber - Math.round(player.adp)}
           </span>
+          <span className="ml-1">{renderPlayerEmoji()}</span>
         </p>
       </div>
     </div>

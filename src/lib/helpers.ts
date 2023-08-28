@@ -1,6 +1,12 @@
 import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
+interface Keeper extends Player {
+  pickedBy: null | number;
+  pickNumber: null | number;
+  value: null | number;
+}
+
 export async function getDraftPicks(leagueId: string) {
   try {
     // Get all drafts for a league
@@ -34,7 +40,12 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
   const keepers: any[] = [];
 
   for (const dbPlayer of dbPlayers) {
-    const playerObj = { pickedBy: null, pickNumber: null, ...dbPlayer };
+    const playerObj: Keeper = {
+      pickedBy: null,
+      pickNumber: null,
+      value: null,
+      ...dbPlayer,
+    };
 
     const [draftPick] = draftPicks.filter(
       (pick: any) => pick.player_id === dbPlayer.sleeperId
@@ -42,6 +53,7 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
 
     playerObj.pickedBy = draftPick?.picked_by;
     playerObj.pickNumber = draftPick?.pick_no;
+    playerObj.value = draftPick?.pick_no - (dbPlayer.adp ? dbPlayer.adp : 0);
 
     keepers.push(playerObj);
   }
