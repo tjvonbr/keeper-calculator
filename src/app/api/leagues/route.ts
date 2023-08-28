@@ -1,7 +1,6 @@
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer";
-import fs from "fs";
 
 export async function GET() {
   try {
@@ -28,41 +27,61 @@ export async function GET() {
       });
     });
 
-    fs.writeFile("test.json", JSON.stringify(players), function (err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log("The file was saved!");
-    });
-
     await browser.close();
 
     for (const player of players) {
       const fullName = player.fullName?.split(" ") as string[];
-      const firstName = fullName[0];
-      const lastName =
-        fullName.length > 2 ? fullName.splice(-2).join(" ") : fullName[1];
-      const teamName = player.team === "JAC" ? "JAX" : player.team;
 
-      const dbPlayer = await db.player.findFirst({
-        where: {
-          firstName,
-          lastName,
-          team: teamName,
-        },
-      });
+      if (fullName.includes("DST")) {
+        const mascot = fullName.length > 3 ? fullName[2] : fullName[1];
+        const city =
+          fullName.length > 3 ? fullName.splice(0, 2).join(" ") : fullName[0];
 
-      if (dbPlayer) {
-        await db.player.update({
+        const dbDefense = await db.player.findFirst({
           where: {
-            id: dbPlayer.id,
-          },
-          data: {
-            adp: Number(player.adp as string),
+            firstName: city,
+            lastName: mascot,
           },
         });
+
+        if (dbDefense) {
+          await db.player.update({
+            where: {
+              id: dbDefense.id,
+            },
+            data: {
+              adp: Number(player.adp as string),
+            },
+          });
+        } else {
+          console.log(fullName);
+        }
       } else {
-        console.log(fullName);
+        const firstName = fullName[0];
+        const lastName =
+          fullName.length > 2 ? fullName.splice(-2).join(" ") : fullName[1];
+        const teamName = player.team === "JAC" ? "JAX" : player.team;
+
+        const dbPlayer = await db.player.findFirst({
+          where: {
+            firstName,
+            lastName,
+            team: teamName,
+          },
+        });
+
+        if (dbPlayer) {
+          await db.player.update({
+            where: {
+              id: dbPlayer.id,
+            },
+            data: {
+              adp: Number(player.adp as string),
+            },
+          });
+        } else {
+          console.log(fullName);
+        }
       }
     }
 
