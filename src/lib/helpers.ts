@@ -21,3 +21,32 @@ export async function getDraftPicks(leagueId: string) {
     throw error;
   }
 }
+
+export async function getKeepers(keeperIds: string[], leagueId: string) {
+  const dbPlayers = await db.player.findMany({
+    where: {
+      sleeperId: { in: keeperIds },
+    },
+  });
+
+  const draftPicks = await getDraftPicks(leagueId);
+
+  const keepers: any[] = [];
+
+  for (const dbPlayer of dbPlayers) {
+    const playerObj = { pickedBy: null, pickNumber: null, ...dbPlayer };
+
+    const [draftPick] = draftPicks.filter(
+      (pick: any) => pick.player_id === dbPlayer.sleeperId
+    );
+
+    playerObj.pickedBy = draftPick?.picked_by;
+    playerObj.pickNumber = draftPick?.pick_no;
+
+    keepers.push(playerObj);
+  }
+
+  const setKeepers = keepers.filter((keeper) => keeper.pickedBy !== undefined);
+
+  return setKeepers;
+}

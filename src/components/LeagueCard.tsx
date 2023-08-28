@@ -22,7 +22,7 @@ export default function LeagueCard({ league }: { league: any }) {
   }
 
   return (
-    <Link href={`/leagues/${league.league_id}${query}`}>
+    <Link href={`/leagues/${league.league_id}`}>
       <div className="h-20 w-full p-2 flex flex-col space-between border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
         <div className="flex items-center space-x-2">
           <p className="text-lg font-bold">{league.name}</p>
