@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import LeagueCard from "./LeagueCard";
 
@@ -9,6 +9,8 @@ export default function Leaguesperations() {
 
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
+
+  if (!userId) redirect("/");
 
   useEffect(() => {
     async function getLeagues() {

@@ -1,4 +1,5 @@
 import LeagueOperations from "@/components/LeagueOperations";
+import { getKeepers } from "@/lib/helpers";
 import { notFound } from "next/navigation";
 
 interface LeagueProps {
@@ -11,11 +12,13 @@ export default async function League({ params }: LeagueProps) {
   const response = await fetch(rostersUrl);
   const rosters = await response.json();
 
-  const keepers = rosters.map((roster: any) => roster.keepers).flat();
+  const keeperIds = rosters.map((roster: any) => roster.keepers).flat();
 
-  if (!keepers) {
+  if (!keeperIds) {
     return notFound();
   }
+
+  const keepers = await getKeepers(keeperIds, params.leagueId);
 
   return (
     <div className="min-h-screen px-3 py-20 flex flex-col justify-center items-center bg-[rgb(16,33,49]">
