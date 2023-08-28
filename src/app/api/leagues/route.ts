@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer";
+import fs from "fs";
 
 export async function GET() {
   try {
@@ -27,6 +28,13 @@ export async function GET() {
       });
     });
 
+    fs.writeFile("test.json", JSON.stringify(players), function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("The file was saved!");
+    });
+
     await browser.close();
 
     for (const player of players) {
@@ -34,12 +42,13 @@ export async function GET() {
       const firstName = fullName[0];
       const lastName =
         fullName.length > 2 ? fullName.splice(-2).join(" ") : fullName[1];
+      const teamName = player.team === "JAC" ? "JAX" : player.team;
 
       const dbPlayer = await db.player.findFirst({
         where: {
           firstName,
           lastName,
-          team: player.team as string,
+          team: teamName,
         },
       });
 
@@ -52,6 +61,8 @@ export async function GET() {
             adp: Number(player.adp as string),
           },
         });
+      } else {
+        console.log(fullName);
       }
     }
 

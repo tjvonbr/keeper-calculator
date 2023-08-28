@@ -40,8 +40,6 @@ export async function GET() {
             sleeperId: player.player_id,
           },
           data: {
-            firstName: player.first_name,
-            lastName: player.last_name ?? null,
             height: player.height ?? null,
             weight: player.weight ?? null,
             team: player.team ?? null,

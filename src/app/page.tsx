@@ -1,5 +1,7 @@
 import LeagueForm from "@/components/LeagueForm";
+import { db } from "@/lib/prisma";
 import { Hammer, Medal, Ruler, Scale } from "lucide-react";
+import puppeteer from "puppeteer";
 
 export default async function Home() {
   return (
