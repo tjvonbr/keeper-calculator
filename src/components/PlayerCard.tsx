@@ -1,4 +1,5 @@
 import { NFLTeamMap, nflTeamMap } from "@/config/league";
+import { OwnerMap } from "@/lib/helpers";
 
 export default function PlayerCard({
   idx,
@@ -30,7 +31,7 @@ export default function PlayerCard({
   }
 
   return (
-    <div className="h-20 w-full p-2 flex space-between items-center border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
+    <div className="h-20 w-full p-2 flex justify-between items-center border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
       <div className="w-1/2 flex flex-col justify-center">
         <div className="flex items-center space-x-2">
           <p className="text-xl font-bold">{fullName}</p>
