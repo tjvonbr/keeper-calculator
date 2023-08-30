@@ -44,12 +44,11 @@ export default function LeagueForm() {
           Find your leagues
         </h1>
         <p className="text-sm text-slate-500">
-          Enter your Sleeper username below to evaluate your keepers. Don&apos;t
-          know how to find your username? Watch{" "}
-          <Link className="text-[#005f83] hover:underline" href="#">
-            this
-          </Link>
-          .
+          Enter your Sleeper username below to evaluate your keepers.{" "}
+          <span className="font-semibold">
+            Right now, this only works for half-PPR leagues with updates coming
+            soon.
+          </span>
         </p>
       </div>
       <fieldset className="w-full flex flex-col">
