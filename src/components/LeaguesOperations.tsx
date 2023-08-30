@@ -22,6 +22,7 @@ export default function Leaguesperations() {
 
     getLeagues();
   }, []);
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
       <h1 className="absolute top-3 left-3 text-4xl text-white font-bold">

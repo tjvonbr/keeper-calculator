@@ -1,10 +1,14 @@
 import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
-interface Keeper extends Player {
-  pickedBy: null | number;
+export interface Keeper extends Player {
+  pickedBy?: number;
   pickNumber: null | number;
   value: null | number;
+}
+
+export interface OwnerMap {
+  [key: string]: string;
 }
 
 export async function getDraftPicks(leagueId: string) {
@@ -41,7 +45,6 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
 
   for (const dbPlayer of dbPlayers) {
     const playerObj: Keeper = {
-      pickedBy: null,
       pickNumber: null,
       value: null,
       ...dbPlayer,
@@ -61,4 +64,18 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
   const setKeepers = keepers.filter((keeper) => keeper.pickedBy !== undefined);
 
   return setKeepers;
+}
+
+export async function getOwners(ownerIds: string[]) {
+  const ownerSet = new Set(ownerIds);
+  const ownerMap: OwnerMap = {};
+
+  for (const ownerId of Array.from(ownerSet)) {
+    const response = await fetch(`https://api.sleeper.app/v1/user/${ownerId}`);
+    const owner = await response.json();
+
+    ownerMap[ownerId] = owner.display_name;
+  }
+
+  return ownerMap;
 }

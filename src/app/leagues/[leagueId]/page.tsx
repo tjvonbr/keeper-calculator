@@ -1,5 +1,5 @@
 import LeagueOperations from "@/components/LeagueOperations";
-import { getKeepers } from "@/lib/helpers";
+import { getKeepers, getOwners } from "@/lib/helpers";
 import { notFound } from "next/navigation";
 
 interface LeagueProps {
@@ -19,13 +19,15 @@ export default async function League({ params }: LeagueProps) {
   }
 
   const keepers = await getKeepers(keeperIds, params.leagueId);
+  const ownerIds = keepers.map((keeper) => keeper.pickedBy);
+  const owners = await getOwners(ownerIds);
 
   return (
     <div className="min-h-screen px-3 py-20 flex flex-col justify-center items-center bg-[rgb(16,33,49]">
       <h1 className="absolute top-3 left-3 text-4xl text-white font-bold self-start">
         Keepers
       </h1>
-      <LeagueOperations keepers={keepers} />
+      <LeagueOperations keepers={keepers} owners={owners} />
     </div>
   );
 }
