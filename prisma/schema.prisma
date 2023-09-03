@@ -12,6 +12,8 @@ datasource db {
 
 model Player {
   id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   firstName       String
   lastName        String
   height          String?
@@ -21,5 +23,21 @@ model Player {
   position        String?
   fantasyId       Int?
   sleeperId       String    @unique
-  adp             Int?
+  adp             AverageDraftPosition[]
+
+  @@map("players")
+}
+
+model AverageDraftPosition {
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  date            DateTime
+  player          Player     @relation(fields: [playerId], references: [id])
+  playerId        String
+  halfPpr         Int?
+  ppr             Int?
+  standard        Int?     
+
+  @@map("average_draft_positions")
 }

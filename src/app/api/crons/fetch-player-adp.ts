@@ -71,12 +71,11 @@ export async function GET() {
         });
 
         if (dbPlayer) {
-          await db.player.update({
-            where: {
-              id: dbPlayer.id,
-            },
+          await db.averageDraftPosition.create({
             data: {
-              adp: Number(player.adp as string),
+              playerId: dbPlayer.id,
+              date: new Date(),
+              halfPpr: Number(player.adp as string),
             },
           });
         } else {
