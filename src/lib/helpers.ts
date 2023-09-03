@@ -79,3 +79,10 @@ export async function getOwners(ownerIds: string[]) {
 
   return ownerMap;
 }
+
+export async function getLeague(leagueId: string) {
+  const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+  const league = await response.json();
+
+  return league;
+}

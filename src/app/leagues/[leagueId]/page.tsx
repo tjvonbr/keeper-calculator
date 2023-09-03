@@ -1,15 +1,19 @@
 import LeagueOperations from "@/components/LeagueOperations";
-import { getKeepers, getOwners } from "@/lib/helpers";
-import { Http2ServerRequest } from "http2";
-import { Divide } from "lucide-react";
-import { notFound } from "next/navigation";
+import { getKeepers, getLeague, getOwners } from "@/lib/helpers";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 interface LeagueProps {
   params: { leagueId: string };
 }
 
 export default async function League({ params }: LeagueProps) {
-  // Fetch the league's rosters
+  const league = await getLeague(params.leagueId);
+
+  if (!league) {
+    return notFound();
+  }
+
   const rostersUrl = `https://api.sleeper.app/v1/league/${params.leagueId}/rosters`;
   const response = await fetch(rostersUrl);
   const rosters = await response.json();
@@ -26,9 +30,17 @@ export default async function League({ params }: LeagueProps) {
 
   return (
     <div className="min-h-screen px-3 py-20 flex flex-col justify-center items-center bg-[rgb(16,33,49]">
-      <h1 className="absolute top-3 left-3 text-4xl text-white font-bold self-start">
-        Keepers
-      </h1>
+      <div className="absolute top-0 left-0 pt-5 px-5 h-10 w-full flex justify-between items-center">
+        <h1 className="text-3xl text-white font-bold">{league.name}</h1>
+        <nav className="flex items-center space-x-4">
+          <Link className="text-sm" href={`${params.leagueId}/draft`}>
+            Draft
+          </Link>
+          <Link className="text-sm" href="/keepers">
+            Keepers
+          </Link>
+        </nav>
+      </div>
       {keepers.length === 0 ? (
         <div className="w-1/2 flex flex-col items-center space-y-2">
           <h2 className="text-4xl font-bold text-white">Heads Up!</h2>
