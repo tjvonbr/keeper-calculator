@@ -40,7 +40,7 @@ export default function LeagueForm() {
   return (
     <form className="w-3/4 lg:w-1/2 p-5 flex flex-col items-center space-y-5 rounded-md bg-white shadow-[0_20px_50px_rgba(41,198,255,_0.5)]">
       <div className="flex flex-col space-y-2">
-        <h1 className="w-full text-left text-2xl font-bold">
+        <h1 className="w-full text-left text-2xl text-black font-bold">
           Find your leagues
         </h1>
         <p className="text-sm text-slate-500">
@@ -52,11 +52,11 @@ export default function LeagueForm() {
         </p>
       </div>
       <fieldset className="w-full flex flex-col">
-        <label className="text-xs font-bold" htmlFor="userId">
+        <label className="text-xs text-black font-bold" htmlFor="userId">
           Sleeper username
         </label>
         <input
-          className="h-10 w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
+          className="h-10 w-full px-3 py-2 border border-slate-300 rounded-md text-black text-sm"
           type="text"
           value={username}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
