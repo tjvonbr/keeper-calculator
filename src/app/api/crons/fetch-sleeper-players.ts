@@ -31,7 +31,6 @@ export async function GET() {
             position: player.depth_chart_position ?? null,
             fantasyId: player.fantasy_data_id ?? null,
             sleeperId: player.player_id,
-            adp: null,
           },
         });
       } else {
