@@ -45,12 +45,12 @@ export async function GET() {
         });
 
         if (dbDefense) {
-          await db.player.update({
+          await db.averageDraftPosition.update({
             where: {
-              id: dbDefense.id,
+              playerId: dbDefense.id,
             },
             data: {
-              adp: Number(player.adp as string),
+              halfPpr: Number(player.adp),
             },
           });
         } else {
