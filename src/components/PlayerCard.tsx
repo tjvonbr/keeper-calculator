@@ -1,5 +1,4 @@
 import { NFLTeamMap, nflTeamMap } from "@/config/league";
-import { OwnerMap } from "@/lib/helpers";
 
 export default function PlayerCard({
   idx,

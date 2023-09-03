@@ -2,8 +2,9 @@ import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
 export interface Keeper extends Player {
+  adp: number | null;
   pickedBy?: number;
-  pickNumber: null | number;
+  pickNumber: number | null;
   value: null | number;
 }
 
@@ -13,14 +14,12 @@ export interface OwnerMap {
 
 export async function getDraftPicks(leagueId: string) {
   try {
-    // Get all drafts for a league
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/drafts`
     );
     const [leagueDrafts] = await response.json();
     const draftId = leagueDrafts.draft_id;
 
-    // Get specific draft
     const result = await fetch(
       `https://api.sleeper.app/v1/draft/${draftId}/picks`
     );
@@ -46,9 +45,18 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
   for (const dbPlayer of dbPlayers) {
     const playerObj: Keeper = {
       pickNumber: null,
+      adp: null,
       value: null,
       ...dbPlayer,
     };
+
+    const adp = await db.averageDraftPosition.findFirst({
+      where: {
+        playerId: dbPlayer.id,
+      },
+    });
+
+    if (adp) playerObj.adp = adp.halfPpr;
 
     const [draftPick] = draftPicks.filter(
       (pick: any) => pick.player_id === dbPlayer.sleeperId
@@ -56,7 +64,7 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
 
     playerObj.pickedBy = draftPick?.picked_by;
     playerObj.pickNumber = draftPick?.pick_no;
-    playerObj.value = draftPick?.pick_no - (dbPlayer.adp ? dbPlayer.adp : 0);
+    playerObj.value = draftPick?.pick_no - (adp?.halfPpr ? adp.halfPpr : 0);
 
     keepers.push(playerObj);
   }
