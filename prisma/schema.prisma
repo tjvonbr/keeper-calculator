@@ -34,10 +34,11 @@ model AverageDraftPosition {
   updatedAt       DateTime   @updatedAt
   date            DateTime
   player          Player     @relation(fields: [playerId], references: [id])
-  playerId        String     @unique
+  playerId        String     
   halfPpr         Int?
   ppr             Int?
   standard        Int?     
 
+  @@unique([playerId, date])
   @@map("average_draft_positions")
 }

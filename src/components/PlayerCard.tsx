@@ -33,7 +33,7 @@ export default function PlayerCard({
     <div className="h-20 w-full p-2 flex justify-between items-center border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
       <div className="w-1/2 flex flex-col justify-center">
         <div className="flex items-center space-x-2">
-          <p className="text-xl font-bold">{fullName}</p>
+          <p className="text-xl text-black font-bold">{fullName}</p>
           <p className="text-sm text-slate-500">{owner}</p>
         </div>
         <div className="flex space-x-2">
@@ -49,16 +49,21 @@ export default function PlayerCard({
         </div>
       </div>
       <div className="w-1/2 flex justify-end text-left space-x-4">
-        <p className="text-sm font-medium">
-          Pick: <span className="text-sm font-medium">{player.pickNumber}</span>
+        <p className="text-sm text-black font-medium">
+          Pick:{" "}
+          <span className="text-sm text-black font-medium">
+            {player.pickNumber}
+          </span>
         </p>
-        <p className="text-sm font-medium">
+        <p className="text-sm text-black font-medium">
           ADP:{" "}
-          <span className="text-sm font-medium">{Math.round(player.adp)}</span>
+          <span className="text-sm text-black font-medium">
+            {Math.round(player.adp)}
+          </span>
         </p>
-        <p className="text-sm font-medium">
+        <p className="text-sm text-black font-medium">
           Value:{" "}
-          <span className="text-sm font-medium">
+          <span className="text-sm text-black font-medium">
             {player.pickNumber - Math.round(player.adp)}
           </span>
           <span className="ml-1">{renderPlayerEmoji()}</span>
