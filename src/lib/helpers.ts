@@ -12,7 +12,7 @@ export interface OwnerMap {
   [key: string]: string;
 }
 
-export async function getDraftPicks(leagueId: string) {
+export async function getDraftData(leagueId: string) {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/drafts`
@@ -20,25 +20,35 @@ export async function getDraftPicks(leagueId: string) {
     const [leagueDrafts] = await response.json();
     const draftId = leagueDrafts.draft_id;
 
+    const draftResponse = await fetch(
+      `https://api.sleeper.app/v1/draft/${draftId}`
+    );
+    const draft = await draftResponse.json();
+    const draftStartTime = draft.start_time;
+
     const result = await fetch(
       `https://api.sleeper.app/v1/draft/${draftId}/picks`
     );
     const draftPicks = await result.json();
 
-    return draftPicks;
+    return { draftStartTime, draftPicks };
   } catch (error) {
     throw error;
   }
 }
 
-export async function getKeepers(keeperIds: string[], leagueId: string) {
+export async function getKeepers(
+  keeperIds: string[],
+  leagueId: string,
+  leagueStatus: string
+) {
   const dbPlayers = await db.player.findMany({
     where: {
       sleeperId: { in: keeperIds },
     },
   });
 
-  const draftPicks = await getDraftPicks(leagueId);
+  const { draftPicks, draftStartTime } = await getDraftData(leagueId);
 
   const keepers: any[] = [];
 
@@ -50,13 +60,35 @@ export async function getKeepers(keeperIds: string[], leagueId: string) {
       ...dbPlayer,
     };
 
-    const adp = await db.averageDraftPosition.findFirst({
-      where: {
-        playerId: dbPlayer.id,
-      },
-    });
+    let adp;
+    if (leagueStatus !== "comlete") {
+      adp = await db.averageDraftPosition.findFirst({
+        where: {
+          playerId: dbPlayer.id,
+          date: {
+            lte: new Date(draftStartTime),
+          },
+        },
+      });
 
-    if (adp) playerObj.adp = adp.halfPpr;
+      if (!adp) {
+        adp = await db.averageDraftPosition.findFirst({
+          where: {
+            playerId: dbPlayer.id,
+          },
+        });
+      }
+
+      if (adp) playerObj.adp = adp.halfPpr;
+    } else {
+      adp = await db.averageDraftPosition.findFirst({
+        where: {
+          playerId: dbPlayer.id,
+        },
+      });
+
+      if (adp) playerObj.adp = adp.halfPpr;
+    }
 
     const [draftPick] = draftPicks.filter(
       (pick: any) => pick.player_id === dbPlayer.sleeperId
