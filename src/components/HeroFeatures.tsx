@@ -1,7 +1,7 @@
 "use client";
 
 import { Feature, features } from "@/config/siteConfig";
-import { Icon } from "@/components/Icon";
+import Icon from "./Icon";
 
 export default function HeroFeatures() {
   return (
