@@ -1,19 +1,4 @@
-import {
-  ActivitySquare,
-  BookOpenCheck,
-  Briefcase,
-  Cloud,
-  Hammer,
-  Headphones,
-  Lock,
-  Medal,
-  Ruler,
-  Scale,
-  Target,
-  Users,
-  Workflow,
-  type LucideIcon,
-} from "lucide-react";
+import { Hammer, Medal, Ruler, Scale, type LucideIcon } from "lucide-react";
 
 export interface Icons {
   [key: string]: LucideIcon;
