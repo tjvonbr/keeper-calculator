@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className="bg-[#181c28]" lang="en">
+    <html className="bg-[#171717]" lang="en">
       <body>{children}</body>
       <Toaster position="bottom-right" />
     </html>

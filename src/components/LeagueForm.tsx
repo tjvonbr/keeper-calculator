@@ -3,7 +3,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Spinner from "./Spinner";
 
 export default function LeagueForm() {
@@ -38,34 +37,18 @@ export default function LeagueForm() {
   }
 
   return (
-    <form className="w-3/4 lg:w-1/2 p-5 flex flex-col items-center space-y-5 rounded-md bg-white shadow-[0_20px_50px_rgba(41,198,255,_0.5)]">
-      <div className="flex flex-col space-y-2">
-        <h1 className="w-full text-left text-2xl text-black font-bold">
-          Find your leagues
-        </h1>
-        <p className="text-sm text-slate-500">
-          Enter your Sleeper username below to evaluate your keepers.{" "}
-          <span className="font-semibold">
-            Right now, this only works for half-PPR leagues with updates coming
-            soon.
-          </span>
-        </p>
-      </div>
-      <fieldset className="w-full flex flex-col">
-        <label className="text-xs text-black font-bold" htmlFor="userId">
-          Sleeper username
-        </label>
-        <input
-          className="h-10 w-full px-3 py-2 border border-slate-300 rounded-md text-black text-sm"
-          type="text"
-          value={username}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUsername(e.target.value)
-          }
-        />
-      </fieldset>
+    <form className="w-1/2 flex justify-center items-center space-x-2 rounded-md">
+      <input
+        className="h-10 w-1/2 px-3 py-2 rounded-md text-black text-sm"
+        type="text"
+        placeholder="Enter your Sleeper username..."
+        value={username}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setUsername(e.target.value)
+        }
+      />
       <button
-        className="h-10 w-full hover:opacity-90 flex items-center justify-center rounded-md text-sm text-white font-medium transition-all bg-[#29c6ff] disabled:cursor-not-allowed"
+        className="h-10 w-[150px] bg-blue-400 hover:bg-blue-300 flex items-center justify-center rounded-md text-sm text-[#171717] font-medium transition-colors disabled:cursor-not-allowed"
         disabled={username.length < 1 || isLoading}
         onClick={handleSubmit}
       >
