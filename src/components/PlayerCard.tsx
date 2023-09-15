@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { NFLTeamMap, nflTeamMap } from "@/config/league";
 
 export default function PlayerCard({
@@ -32,9 +33,23 @@ export default function PlayerCard({
   return (
     <div className="h-20 w-full p-2 flex justify-between items-center border rounded-md bg-white hover:bg-slate-100 transition-colors shadow-[rgba(7,_65,_210,_0.1)_0px_9px_30px]">
       <div className="w-1/2 flex flex-col justify-center">
-        <div className="flex items-center space-x-2">
-          <p className="text-xl text-black font-bold">{fullName}</p>
-          <p className="text-sm text-slate-500">{owner}</p>
+        <div className="flex items-center">
+          <object
+            data={`https://sleepercdn.com/content/nfl/players/${player.sleeperId}.jpg`}
+            type="image/png"
+            height="32"
+            width="44"
+          ></object>
+          <object
+            className="-translate-x-4 translate-y-1.5"
+            data={`https://sleepercdn.com/images/team_logos/nfl/${player.team.toLowerCase()}.png`}
+            height="16"
+            width="16"
+          />
+          <div className="flex items-center space-x-2 -translate-x-2">
+            <p className="text-xl text-black font-bold">{fullName}</p>
+            <p className="text-sm text-slate-500">{owner}</p>
+          </div>
         </div>
         <div className="flex space-x-2">
           <p className="text-sm text-slate-500 font-medium">
