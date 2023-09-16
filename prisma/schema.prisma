@@ -42,3 +42,16 @@ model AverageDraftPosition {
   @@unique([playerId, date])
   @@map("average_draft_positions")
 }
+
+model DroppedPasses {
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  playerId        String
+  week            Int
+  year            Int
+  droppedPasses   Int
+
+  @@unique([playerId, week, year])
+  @@map("dropped_passes")
+}
