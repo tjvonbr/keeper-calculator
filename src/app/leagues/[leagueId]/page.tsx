@@ -43,13 +43,13 @@ export default async function League({ params }: LeagueProps) {
       </div>
       {keepers.length === 0 ? (
         <div className="w-1/2 flex flex-col items-center space-y-2">
-          <h2 className="text-4xl font-bold text-white">Heads Up!</h2>
-          <p className="text-xl text-center text-white">
-            If you don&apos;t see any keepers here, and you know you&apos;ve set
-            your keepers, remind your commisioner to add your keepers to the
-            upcoming draft. We&apos;re working on a solution so you&apos;re
-            commisioner does not need to get involved, but in the meantime,
-            it&apos;s necessary. Thanks!
+          <h2 className="text-2xl font-bold text-white">Whoops!</h2>
+          <p className="text-md text-center text-blue-100 font-medium">
+            If you don&apos;t see your league&apos;s keepers here, and you know
+            you&apos;ve set them, remind your commisioner to add your keepers to
+            your league&apos;s draftboard. We&apos;re working on a solution so
+            you&apos;re commisioner does not need to get involved, but in the
+            meantime, it&apos;s unfortunately necessary. Thanks for patience!
           </p>
         </div>
       ) : (
