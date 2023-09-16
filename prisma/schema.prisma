@@ -24,6 +24,7 @@ model Player {
   fantasyId       Int?
   sleeperId       String    @unique
   adp             AverageDraftPosition[]
+  droppedPasses   DroppedPasses[]
 
   @@map("players")
 }
@@ -47,6 +48,7 @@ model DroppedPasses {
   id              String     @id @default(uuid())
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  player          Player     @relation(fields: [playerId], references: [id])
   playerId        String
   week            Int
   year            Int

@@ -126,3 +126,17 @@ export async function getLeague(leagueId: string) {
 
   return league;
 }
+
+export async function getDroppedPasses(season: number, week: number) {
+  const droppedPasses = await db.droppedPasses.findMany({
+    where: {
+      year: season,
+      week,
+    },
+    include: {
+      player: true,
+    },
+  });
+
+  return droppedPasses;
+}
