@@ -1,3 +1,4 @@
+import { metadata } from "./../app/layout";
 import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
@@ -125,6 +126,47 @@ export async function getLeague(leagueId: string) {
   const league = await response.json();
 
   return league;
+}
+
+export async function findOrCreateLeagues(userId: string) {
+  const leaguesResponse = await fetch(
+    `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/2023`
+  );
+  const leagues = await leaguesResponse.json();
+
+  const dbLeagues = await db.$transaction(
+    leagues.map((league: any) =>
+      db.league.upsert({
+        where: {
+          sleeperId: league.league_id,
+        },
+        include: {
+          scoringSettings: true,
+        },
+        update: {},
+        create: {
+          name: league.name,
+          sleeperId: league.league_id,
+          previousLeagueSleeperId: league.previous_league_id,
+          status: league.status,
+          teams: league.total_rosters,
+          maxKeepers: league.settings.max_keepers,
+          seasonType: league.season_type,
+          season: league.season,
+          scoringSettings: {
+            create: {
+              fumble: league.scoring_settings.fum,
+              fumbleLost: league.scoring_settings.fum_lost,
+              interceptionThrown: league.scoring_settings.pass_int,
+              reception: league.scoring_settings.rec,
+            },
+          },
+        },
+      })
+    )
+  );
+
+  return dbLeagues;
 }
 
 export async function getDroppedPasses(season: number, week: number) {

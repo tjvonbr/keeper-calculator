@@ -30,10 +30,7 @@ export default function LeagueForm() {
       );
     }
 
-    current.set("userId", user.user_id);
-    const search = current.toString();
-    const query = search ? `?${search}` : "";
-    router.push(`leagues/${query}`);
+    router.push(`users/${user.user_id}/leagues`);
   }
 
   return (
