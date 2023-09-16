@@ -10,6 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model League {
+  id                          String     @id @default(uuid())
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+  name                        String     
+  sleeperId                   String     @unique
+  previousLeagueSleeperId     String?
+  status                      String
+  teams                       Int
+  maxKeepers                  Int
+  seasonType                  String
+  season                      String
+  scoringSettings             LeagueScoringSettings?
+
+  @@map("leagues")
+}
+
+model LeagueScoringSettings {
+  id                          String     @id @default(uuid())
+  createdAt                   DateTime   @default(now())
+  updatedAt                   DateTime   @updatedAt
+  fumble                      Float      
+  fumbleLost                  Float
+  interceptionThrown          Float
+  reception                   Float
+  league                      League      @relation(fields: [leagueId], references: [id])
+  leagueId                    String     @unique
+
+  @@map("league_scoring_settings")
+}
+
 model Player {
   id              String     @id @default(uuid())
   createdAt       DateTime   @default(now())
