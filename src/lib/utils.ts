@@ -7,3 +7,7 @@ export function renderPlayerPosition(position: string) {
     return position;
   }
 }
+
+export function toReadableTime(seconds: number) {
+  return new Date(seconds);
+}
