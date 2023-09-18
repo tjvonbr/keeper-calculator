@@ -19,7 +19,6 @@ export default async function LeagueDraft({
   }
 
   const { draftResults, draft } = await getDraftById(league.draftId);
-  draftResults.sort((playerA, playerB) => playerA.pick_no - playerB.pick_no);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -50,7 +49,7 @@ function draftRows(rounds: number, draftPicks: any[]) {
           return (
             <div
               key={idx}
-              className="box-border h-[50px] w-[120px] px-[3px] py-[2px] bg-white rounded-md text-black flex-grow overflow-hidden"
+              className="relative box-border h-[50px] w-[120px] px-[3px] py-[2px] bg-white rounded-md text-black flex-grow overflow-hidden"
             >
               <div className="w-full flex relative">
                 <p className="w-[80%] truncate text-xs text-black font-bold">
@@ -65,12 +64,17 @@ function draftRows(rounds: number, draftPicks: any[]) {
                 <p>{"-"}</p>
                 <p>{renderPlayerPosition(player.position)}</p>
               </div>
+
               <Image
-                src={`https://sleepercdn.com/content/nfl/players/${player.sleeperId}.jpg`}
+                src={
+                  player.metadata.position === "DEF"
+                    ? `https://sleepercdn.com/images/team_logos/nfl/${player.player_id.toLowerCase()}.png`
+                    : `https://sleepercdn.com/content/nfl/players/${player.sleeperId}.jpg`
+                }
                 alt={`${player.lastName} Avatar`}
                 className="absolute right-0 bottom-0"
-                height="16"
-                width="22"
+                height="24"
+                width="38"
               />
             </div>
           );
