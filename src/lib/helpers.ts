@@ -12,6 +12,8 @@ export interface OwnerMap {
   [key: string]: string;
 }
 
+export interface AvatarMap extends OwnerMap {}
+
 export async function getDraftById(draftId: string) {
   const response = await fetch(`https://api.sleeper.app/v1/draft/${draftId}`);
   const draft = await response.json();
@@ -29,7 +31,22 @@ export async function getDraftById(draftId: string) {
       },
     });
 
-    const playerObj = { ...draftPick, ...dbPlayer };
+    if (!dbPlayer) {
+      break;
+    }
+
+    const playerAdp = await db.averageDraftPosition.findFirst({
+      where: {
+        playerId: dbPlayer.id,
+      },
+    });
+
+    const playerObj = {
+      ...draftPick,
+      ...dbPlayer,
+      adp: playerAdp?.halfPpr,
+      value: playerAdp?.halfPpr ? draftPick.pick_no - playerAdp?.halfPpr : 0,
+    };
     draftResults.push(playerObj);
   }
 
@@ -133,15 +150,17 @@ export async function getKeepers(
 export async function getOwners(ownerIds: string[]) {
   const ownerSet = new Set(ownerIds);
   const ownerMap: OwnerMap = {};
+  const avatarMap: AvatarMap = {};
 
   for (const ownerId of Array.from(ownerSet)) {
     const response = await fetch(`https://api.sleeper.app/v1/user/${ownerId}`);
     const owner = await response.json();
 
     ownerMap[ownerId] = owner.display_name;
+    avatarMap[ownerId] = owner.avatar;
   }
 
-  return ownerMap;
+  return { ownerMap, avatarMap };
 }
 
 export async function getLeagueById(leagueId: string) {
