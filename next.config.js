@@ -9,7 +9,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "sleepercdn.com",
         port: "",
-        pathname: "/content/nfl/players/**",
+        pathname: "**",
       },
     ],
   },
