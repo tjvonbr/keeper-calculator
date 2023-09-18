@@ -26,7 +26,7 @@ export default async function League({ params }: LeagueProps) {
 
   const keepers = await getKeepers(keeperIds, params.leagueId, league.status);
   const ownerIds = keepers.map((keeper) => keeper.pickedBy);
-  const owners = await getOwners(ownerIds);
+  const { ownerMap } = await getOwners(ownerIds);
 
   return (
     <div className="min-h-screen px-3 py-20 flex flex-col justify-center items-center bg-[rgb(16,33,49]">
@@ -53,7 +53,7 @@ export default async function League({ params }: LeagueProps) {
           </p>
         </div>
       ) : (
-        <LeagueOperations keepers={keepers} owners={owners} />
+        <LeagueOperations keepers={keepers} owners={ownerMap} />
       )}
     </div>
   );

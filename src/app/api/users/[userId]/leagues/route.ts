@@ -1,32 +1,89 @@
 import { db } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import puppeteer from "puppeteer";
 
 export async function GET() {
   try {
-    const url = "https://api.sleeper.app/v1/players/nfl";
+    const url =
+      "https://www.fantasypros.com/nfl/adp/half-point-ppr-overall.php";
 
-    const response = await fetch(url);
-    const rawPlayers = await response.json();
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url, {
+      timeout: 0,
+    });
 
-    const players: any[] = Object.values(rawPlayers);
+    const players = await page.$$eval("tbody > tr", (players) => {
+      return players.map((p) => {
+        const fullName = p.querySelector("a")?.innerText;
+        const team = p.querySelector("small")?.innerText;
+        const adp = p.querySelector("td:nth-child(5)")?.innerHTML;
+
+        return {
+          fullName,
+          team,
+          adp,
+        };
+      });
+    });
+
+    await browser.close();
 
     for (const player of players) {
-      await db.player.create({
-        data: {
-          firstName: player.first_name,
-          lastName: player.last_name ?? null,
-          height: player.height ?? null,
-          weight: player.weight ?? null,
-          team: player.team ?? null,
-          jerseyNumber: player.number ?? null,
-          position: player.depth_chart_position ?? null,
-          fantasyId: player.fantasy_data_id ?? null,
-          sleeperId: player.player_id,
-        },
-      });
+      const fullName = player.fullName?.split(" ") as string[];
+
+      if (fullName.includes("DST")) {
+        const mascot = fullName.length > 3 ? fullName[2] : fullName[1];
+        const city =
+          fullName.length > 3 ? fullName.splice(0, 2).join(" ") : fullName[0];
+
+        const dbDefense = await db.player.findFirst({
+          where: {
+            firstName: city,
+            lastName: mascot,
+          },
+        });
+
+        if (dbDefense) {
+          await db.averageDraftPosition.create({
+            data: {
+              playerId: dbDefense.id,
+              date: new Date(),
+              halfPpr: Number(player.adp as string),
+            },
+          });
+        } else {
+          console.log(fullName);
+        }
+      } else {
+        const firstName = fullName[0];
+        const lastName =
+          fullName.length > 2 ? fullName.splice(-2).join(" ") : fullName[1];
+        const teamName = player.team === "JAC" ? "JAX" : player.team;
+
+        const dbPlayer = await db.player.findFirst({
+          where: {
+            firstName,
+            lastName,
+            team: teamName,
+          },
+        });
+
+        if (dbPlayer) {
+          await db.averageDraftPosition.create({
+            data: {
+              playerId: dbPlayer.id,
+              date: new Date(),
+              halfPpr: Number(player.adp as string),
+            },
+          });
+        } else {
+          console.log(fullName);
+        }
+      }
     }
 
-    return NextResponse.json(200);
+    return NextResponse.json({ status: 200 });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
