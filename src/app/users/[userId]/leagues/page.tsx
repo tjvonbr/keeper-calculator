@@ -7,8 +7,10 @@ interface UserLeaguesProps {
   };
 }
 
-export default async function Leagues({ params }: UserLeaguesProps) {
-  const leagues = await findOrCreateLeagues(params.userId);
+export default async function Leagues({
+  params: { userId },
+}: UserLeaguesProps) {
+  const leagues = await findOrCreateLeagues(userId);
 
   return <LeaguesOperations leagues={leagues} />;
 }

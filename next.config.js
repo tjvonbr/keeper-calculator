@@ -3,6 +3,16 @@ const nextConfig = {
   env: {
     SPORTS_DATA_API_KEY: process.env.SPORTS_DATA_API_KEY,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "sleepercdn.com",
+        port: "",
+        pathname: "/content/nfl/players/**",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

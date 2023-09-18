@@ -1,5 +1,5 @@
 import LeagueOperations from "@/components/LeagueOperations";
-import { getKeepers, getLeague, getOwners } from "@/lib/helpers";
+import { getKeepers, getLeagueById, getOwners } from "@/lib/helpers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -8,7 +8,7 @@ interface LeagueProps {
 }
 
 export default async function League({ params }: LeagueProps) {
-  const league = await getLeague(params.leagueId);
+  const league = await getLeagueById(params.leagueId);
 
   if (!league) {
     return notFound();

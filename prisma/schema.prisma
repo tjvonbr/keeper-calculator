@@ -23,6 +23,7 @@ model League {
   seasonType                  String
   season                      String
   scoringSettings             LeagueScoringSettings?
+  draftId                     String
 
   @@map("leagues")
 }

@@ -1,4 +1,3 @@
-import { metadata } from "./../app/layout";
 import { Player } from "@prisma/client";
 import { db } from "./prisma";
 
@@ -11,6 +10,30 @@ export interface Keeper extends Player {
 
 export interface OwnerMap {
   [key: string]: string;
+}
+
+export async function getDraftById(draftId: string) {
+  const response = await fetch(`https://api.sleeper.app/v1/draft/${draftId}`);
+  const draft = await response.json();
+
+  const draftPicksResponse = await fetch(
+    `https://api.sleeper.app/v1/draft/${draftId}/picks`
+  );
+  const draftPicks = await draftPicksResponse.json();
+  const draftResults = [];
+
+  for (const draftPick of draftPicks) {
+    const dbPlayer = await db.player.findFirst({
+      where: {
+        sleeperId: draftPick.player_id,
+      },
+    });
+
+    const playerObj = { ...draftPick, ...dbPlayer };
+    draftResults.push(playerObj);
+  }
+
+  return { draft, draftResults };
 }
 
 export async function getDraftData(leagueId: string) {
@@ -62,7 +85,7 @@ export async function getKeepers(
     };
 
     let adp;
-    if (leagueStatus !== "comlete") {
+    if (leagueStatus !== "complete") {
       adp = await db.averageDraftPosition.findFirst({
         where: {
           playerId: dbPlayer.id,
@@ -121,9 +144,15 @@ export async function getOwners(ownerIds: string[]) {
   return ownerMap;
 }
 
-export async function getLeague(leagueId: string) {
-  const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
-  const league = await response.json();
+export async function getLeagueById(leagueId: string) {
+  const league = await db.league.findFirst({
+    where: {
+      sleeperId: leagueId,
+    },
+    include: {
+      scoringSettings: true,
+    },
+  });
 
   return league;
 }
@@ -153,6 +182,7 @@ export async function findOrCreateLeagues(userId: string) {
           maxKeepers: league.settings.max_keepers,
           seasonType: league.season_type,
           season: league.season,
+          draftId: league.draft_id,
           scoringSettings: {
             create: {
               fumble: league.scoring_settings.fum,
