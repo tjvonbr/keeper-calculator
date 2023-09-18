@@ -1,6 +1,6 @@
 import { getDraftById, getLeagueById } from "@/lib/helpers";
 import Image from "next/image";
-import { renderPlayerPosition } from "@/lib/utils";
+import { renderPlayerPosition, toReadableTime } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
 interface DraftProps {
@@ -21,8 +21,19 @@ export default async function LeagueDraft({
   const { draftResults, draft } = await getDraftById(league.draftId);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <h1 className="text-2xl text-white font-extrabold">Draft</h1>
+    <div className="min-h-screen relative flex flex-col">
+      <div className="leading-none">
+        <h1 className="m-0 text-2xl text-white font-extrabold">
+          Draft Results
+        </h1>
+        <p className="text-white font-bold">{draft.metadata.name}</p>
+        <div className="flex space-x-2">
+          <p className="text-xs text-gray-300 font-semibold uppercase">{`Status: ${draft.status}`}</p>
+          <p className="text-xs text-gray-300 font-semibold uppercase">
+            {toReadableTime(draft.start_time).toDateString()}
+          </p>
+        </div>
+      </div>
       <div className="mt-56 flex flex-col space-y-2">
         {draftRows(draft.settings.rounds, draftResults)}
       </div>
